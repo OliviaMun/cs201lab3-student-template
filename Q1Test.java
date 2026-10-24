@@ -62,7 +62,6 @@ public class Q1Test {
           System.out.println();
      } 
 
-      // write your codes here
      public static int[] parseTraversal(String traversal){
           String[] parts = traversal.split("-");
           int[] arr = new int[parts.length];
