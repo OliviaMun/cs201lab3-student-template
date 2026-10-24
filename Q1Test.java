@@ -130,6 +130,69 @@ public class Q1Test {
                isValidPostOrder(post, in, inStart, rootIndex - 1, postIndex);
      }
 
+public static boolean matchesPostorder(int[] pre, int[] post, int[] in) {
+    int[] generated = new int[pre.length];
+    int[] preIndex = {0};
+    int[] postIndex = {0};
+
+    if (!buildPostorder(pre, in, 0, in.length - 1,
+                        preIndex, generated, postIndex)) {
+        return false;
+    }
+
+    if (preIndex[0] != pre.length || postIndex[0] != post.length) {
+        return false;
+    }
+
+    for (int i = 0; i < post.length; i++) {
+        if (generated[i] != post[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+     public static boolean buildPostorder(int[] pre, int[] in,
+          int inStart, int inEnd, int[] preIndex,
+          int[] generated, int[] postIndex) {
+
+     if (inStart > inEnd) {
+          return true;
+     }
+
+     if (preIndex[0] >= pre.length) {
+          return false;
+     }
+
+     int root = pre[preIndex[0]++];
+     int rootIndex = -1;
+
+     for (int i = inStart; i <= inEnd; i++) {
+          if (in[i] == root) {
+               rootIndex = i;
+               break;
+          }
+     }
+
+     if (rootIndex == -1) {
+          return false;
+     }
+
+     if (!buildPostorder(pre, in, inStart, rootIndex - 1,
+                         preIndex, generated, postIndex)) {
+          return false;
+     }
+
+     if (!buildPostorder(pre, in, rootIndex + 1, inEnd,
+                         preIndex, generated, postIndex)) {
+          return false;
+     }
+
+     generated[postIndex[0]++] = root;
+     return true;
+     }
+
      public static String verify(String traversal1, String traversal2, String traversal3){
 
         // find the string sorted in ascending order, that is inorder traversal
@@ -155,14 +218,16 @@ public class Q1Test {
                && isValidBST(arr2, arr1, 0, arr1.length - 1, 0)
                && isValidPostOrder(arr3, arr1, 0, arr1.length - 1, new int[]{arr1.length - 1})
                && isValidPreorderBST(arr2)
-               && isValidPostorderBST(arr3)) {
+               && isValidPostorderBST(arr3)
+               && matchesPostorder(arr2, arr3, arr1)) {
                orderOfT2.append("Preorder");
                orderOfT3.append("Postorder");               
           } else if (arr3[0] == arr2[len - 1]
                && isValidBST(arr3, arr1, 0, arr1.length - 1, 0)
                && isValidPostOrder(arr2, arr1, 0, arr1.length - 1, new int[]{arr1.length - 1})
                && isValidPreorderBST(arr3)
-               && isValidPostorderBST(arr2)) {
+               && isValidPostorderBST(arr2)
+               && matchesPostorder(arr3, arr2, arr1)) {
                orderOfT2.append("Postorder");
                orderOfT3.append("Preorder");   
           } else {
@@ -174,14 +239,16 @@ public class Q1Test {
                && isValidBST(arr1, arr2, 0, arr2.length - 1, 0)
                && isValidPostOrder(arr3, arr2, 0, arr2.length - 1, new int[]{arr2.length - 1})
                && isValidPreorderBST(arr1)
-               && isValidPostorderBST(arr3)) {
+               && isValidPostorderBST(arr3) 
+               && matchesPostorder(arr1, arr3, arr2)){
                orderOfT1.append("Preorder");
                orderOfT3.append("Postorder");               
           } else if (arr3[0] == arr1[len - 1]
                && isValidBST(arr3, arr2, 0, arr2.length - 1, 0)
                && isValidPostOrder(arr1, arr2, 0, arr2.length - 1, new int[]{arr2.length - 1})
                && isValidPreorderBST(arr3)
-               && isValidPostorderBST(arr1)) {
+               && isValidPostorderBST(arr1)
+               && matchesPostorder(arr3, arr1, arr2)){
                orderOfT1.append("Postorder");
                orderOfT3.append("Preorder");   
           } else {
@@ -193,14 +260,16 @@ public class Q1Test {
                && isValidBST(arr1, arr3, 0, arr3.length - 1, 0)
                && isValidPostOrder(arr2, arr3, 0, arr3.length - 1, new int[]{arr3.length - 1})
                && isValidPreorderBST(arr1)
-               && isValidPostorderBST(arr2)) {
+               && isValidPostorderBST(arr2)
+               && matchesPostorder(arr1, arr2, arr3)) {
                orderOfT1.append("Preorder");
                orderOfT2.append("Postorder");
           } else if (arr2[0] == arr1[len - 1]
                && isValidBST(arr2, arr3, 0, arr3.length - 1, 0)
                && isValidPostOrder(arr1, arr3, 0, arr3.length - 1, new int[]{arr3.length - 1})
                && isValidPreorderBST(arr2)
-               && isValidPostorderBST(arr1)) {
+               && isValidPostorderBST(arr1)
+               && matchesPostorder(arr2, arr1, arr3)) {
                orderOfT1.append("Postorder");
                orderOfT2.append("Preorder");
           } else {
