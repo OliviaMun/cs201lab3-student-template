@@ -151,12 +151,18 @@ public class Q1Test {
 
         if (isT1Sorted){
           orderOfT1.append("Inorder");
-          if (arr2[0] == arr3[len - 1] && isValidBST(arr2, arr1, 0, arr1.length - 1, 0) && 
-               isValidPostOrder(arr3, arr1, 0, arr1.length - 1, new int[]{arr1.length - 1})){
+          if (arr2[0] == arr3[len - 1] 
+               && isValidBST(arr2, arr1, 0, arr1.length - 1, 0)
+               && isValidPostOrder(arr3, arr1, 0, arr1.length - 1, new int[]{arr1.length - 1})
+               && isValidPreorderBST(arr2)
+               && isValidPostorderBST(arr3)) {
                orderOfT2.append("Preorder");
                orderOfT3.append("Postorder");               
-          } else if (arr3[0] == arr2[len - 1] && isValidBST(arr3, arr1, 0, arr1.length - 1, 0) && 
-               isValidPostOrder(arr2, arr1, 0, arr1.length - 1, new int[]{arr1.length - 1})){
+          } else if (arr3[0] == arr2[len - 1]
+               && isValidBST(arr3, arr1, 0, arr1.length - 1, 0)
+               && isValidPostOrder(arr2, arr1, 0, arr1.length - 1, new int[]{arr1.length - 1})
+               && isValidPreorderBST(arr3)
+               && isValidPostorderBST(arr2)) {
                orderOfT2.append("Postorder");
                orderOfT3.append("Preorder");   
           } else {
@@ -164,12 +170,18 @@ public class Q1Test {
           }
         } else if (isT2Sorted){
           orderOfT2.append("Inorder");
-          if (arr1[0] == arr3[len - 1] && isValidBST(arr1, arr2, 0, arr2.length - 1, 0) && 
-               isValidPostOrder(arr3, arr2, 0, arr2.length - 1, new int[]{arr2.length - 1})){
+          if (arr1[0] == arr3[len - 1]
+               && isValidBST(arr1, arr2, 0, arr2.length - 1, 0)
+               && isValidPostOrder(arr3, arr2, 0, arr2.length - 1, new int[]{arr2.length - 1})
+               && isValidPreorderBST(arr1)
+               && isValidPostorderBST(arr3)) {
                orderOfT1.append("Preorder");
                orderOfT3.append("Postorder");               
-          } else if (arr3[0] == arr1[len - 1] && isValidBST(arr3, arr2, 0, arr2.length - 1, 0) && 
-               isValidPostOrder(arr1, arr2, 0, arr2.length - 1, new int[]{arr2.length - 1})){
+          } else if (arr3[0] == arr1[len - 1]
+               && isValidBST(arr3, arr2, 0, arr2.length - 1, 0)
+               && isValidPostOrder(arr1, arr2, 0, arr2.length - 1, new int[]{arr2.length - 1})
+               && isValidPreorderBST(arr3)
+               && isValidPostorderBST(arr1)) {
                orderOfT1.append("Postorder");
                orderOfT3.append("Preorder");   
           } else {
@@ -177,12 +189,18 @@ public class Q1Test {
           }
         } else if (isT3Sorted){
           orderOfT3.append("Inorder");
-          if (arr1[0] == arr2[len - 1] && isValidBST(arr1, arr3, 0, arr3.length - 1, 0) &&
-               isValidPostOrder(arr2, arr3, 0, arr3.length - 1, new int[]{arr3.length - 1})) {
+          if (arr1[0] == arr2[len - 1]
+               && isValidBST(arr1, arr3, 0, arr3.length - 1, 0)
+               && isValidPostOrder(arr2, arr3, 0, arr3.length - 1, new int[]{arr3.length - 1})
+               && isValidPreorderBST(arr1)
+               && isValidPostorderBST(arr2)) {
                orderOfT1.append("Preorder");
                orderOfT2.append("Postorder");
-          } else if (arr2[0] == arr1[len - 1] && isValidBST(arr2, arr3, 0, arr3.length - 1, 0) &&
-               isValidPostOrder(arr1, arr3, 0, arr3.length - 1, new int[]{arr3.length - 1})) {
+          } else if (arr2[0] == arr1[len - 1]
+               && isValidBST(arr2, arr3, 0, arr3.length - 1, 0)
+               && isValidPostOrder(arr1, arr3, 0, arr3.length - 1, new int[]{arr3.length - 1})
+               && isValidPreorderBST(arr2)
+               && isValidPostorderBST(arr1)) {
                orderOfT1.append("Postorder");
                orderOfT2.append("Preorder");
           } else {
@@ -194,5 +212,41 @@ public class Q1Test {
 
         return String.format("Traversal 1 - %s, Traversal 2 - %s, Traversal 3 - %s", 
                               orderOfT1.toString(), orderOfT2.toString(), orderOfT3.toString());
+     }
+
+     public static boolean isValidPreorderBST(int[] arr) {
+     int[] index = {0};
+     return checkPreorderBST(arr, index, Long.MIN_VALUE, Long.MAX_VALUE)
+               && index[0] == arr.length;
+     }
+
+     public static boolean checkPreorderBST(int[] arr, int[] index, long lower, long upper) {
+     if (index[0] >= arr.length) return true;
+
+     int value = arr[index[0]];
+     if (value <= lower || value >= upper) return true;
+
+     index[0]++;
+
+     return checkPreorderBST(arr, index, lower, value)
+               && checkPreorderBST(arr, index, value, upper);
+     }
+
+     public static boolean isValidPostorderBST(int[] arr) {
+     int[] index = {arr.length - 1};
+     return checkPostorderBST(arr, index, Long.MIN_VALUE, Long.MAX_VALUE)
+               && index[0] == -1;
+     }
+
+     public static boolean checkPostorderBST(int[] arr, int[] index, long lower, long upper) {
+     if (index[0] < 0) return true;
+
+     int value = arr[index[0]];
+     if (value <= lower || value >= upper) return true;
+
+     index[0]--;
+
+     return checkPostorderBST(arr, index, value, upper)
+               && checkPostorderBST(arr, index, lower, value);
      }
 }
